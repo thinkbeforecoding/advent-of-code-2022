@@ -1,4 +1,3 @@
-
 let mapPair f (x,y) = f x, f y
 
 let parsePair c (s: string) =
@@ -18,6 +17,19 @@ let anyContains (x,y) = contains (x,y) || contains (y,x)
 let overlap ((s1,e1), (s2,e2)) =
     not (e1 < s2 || e2 < s1)
 
+// part 1
+System.IO.File.ReadAllLines("input/day04.txt")
+|> Seq.map parse
+|> Seq.filter anyContains
+|> Seq.length
+
+// part 2
+System.IO.File.ReadAllLines("input/day04.txt")
+|> Seq.map parse
+|> Seq.filter overlap
+|> Seq.length
+
+
 """2-4,6-8
 2-3,4-5
 5-7,7-9
@@ -28,13 +40,7 @@ let overlap ((s1,e1), (s2,e2)) =
 |> Seq.filter anyContains
 |> Seq.length
 
-System.IO.File.ReadAllLines("input/day04.txt")
-|> Seq.map parse
-|> Seq.filter anyContains
-|> Seq.length
 
-System.IO.File.ReadAllLines("input/day04.txt")
-|> Seq.map parse
-|> Seq.filter overlap
-|> Seq.length
+
+
 
