@@ -25,8 +25,8 @@ let start =
     lines
     |> Array.take (stacks.Length-1)
     |> Array.rev
-    |> Array.map ( parseLine nb)
-    |> Array.fold stack [|for i in 1..nb -> []|]
+    |> Array.map (parseLine nb)
+    |> Array.fold stack (Array.create nb []) 
 
 
 let moveLines = lines |> Array.skip(stacks.Length+1)
@@ -36,32 +36,22 @@ let parseMove (l: string) =
     let crates = int m.Groups[1].Value
     let from = int m.Groups[2].Value
     let dest = int m.Groups[3].Value
-    crates, from, dest
+    crates, from-1, dest-1
 
-let rec crane (stacks: char list[]) (crates, from, dest) =
-    if crates = 0 then
-        stacks
-    else
-        let stackFrom = stacks[from-1]
-        let crate = stackFrom.Head
-        let stacks = Array.copy stacks
-        stacks[from-1] <- stackFrom.Tail
-        stacks[dest-1] <- crate::stacks[dest-1]
-        crane stacks (crates-1, from, dest)
+let transfer (a: _[]) f (n,from,dest) =
+    a |> Array.mapi (fun i v -> 
+        if i = from then a[from] |> List.skip n
+        elif i = dest then f (List.take n a[from]) @ a[dest]
+        else v  )
 
-let  crane9001 (stacks: char list[]) (crates, from, dest) =
-        let stackFrom = stacks[from-1]
-        let crateStack = List.take crates stackFrom
-        let stacks = Array.copy stacks
-        stacks[from-1] <- List.skip crates stackFrom
-        stacks[dest-1] <- crateStack @ stacks[dest-1]
-        stacks
-   
+let crane stacks move =
+    transfer stacks List.rev move
+
+let  crane9001 stacks move =
+    transfer stacks id move
 
 let top (stacks: char list[]) =
-    [| for stack in stacks ->
-        stack.Head
-    |] |> String
+    stacks |> Array.map List.head |> String
 
 moveLines
 |> Seq.map parseMove
