@@ -39,7 +39,7 @@ loop:
 check_window:               /* check if the window contains only distinct chars */
     add     x6, x5, x11     /* x6 is end of span */
     cmp     x6, x4          /* check if the window pass the end of the string */
-    b.eq    notfound        /* in this case, we did not find */
+    b.ge    notfound        /* in this case, we did not find */
 
     mov     x7, x5          /* x7 is pointer in span */
 loop_x:
