@@ -13,9 +13,10 @@ mem:
 /* Our application's entry point. */
 .globl _start
 _start:
+    mov     x11, #14            /* x11 is the size of the window, 14 for part 2 */
+                                /* change it to 4 for part 1 */
 
 /* Read STDIN and copy it at mem address */
-    mov     x11, #14            /* x11 is the size of the window */
     ldr     x4, =mem            /* x4 is an pointer to load stdin by chunks of 1024 bytes */ 
 loop:
     add     x0,x4, #1024        /* reserve 1024 bytes */
