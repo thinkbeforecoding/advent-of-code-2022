@@ -13,24 +13,24 @@ mem:
 /* Our application's entry point. */
 .globl _start
 _start:
-    mov     x11, #14            /* x11 is the size of the window, 14 for part 2 */
-                                /* change it to 4 for part 1 */
+    mov     x11, #14        /* x11 is the size of the window, 14 for part 2 */
+                            /* change it to 4 for part 1 */
 
 /* Read STDIN and copy it at mem address */
-    ldr     x4, =mem            /* x4 is an pointer to load stdin by chunks of 1024 bytes */ 
+    ldr     x4, =mem        /* x4 is an pointer to load stdin by chunks of 1024 bytes */ 
 loop:
-    add     x0,x4, #1024        /* reserve 1024 bytes */
-    mov     w8, #214            /* brk: extende data memory to x0 */
+    add     x0,x4, #1024    /* reserve 1024 bytes */
+    mov     w8, #214        /* brk: extende data memory to x0 */
     svc     #0
 
-    mov    x0, #0               /* #0 is Stdint */
-    mov    x1, x4               /* read and copy at x4 */
-    mov    x2, #1024            /* size of the read */
-    mov    w8, #63              /* read is syscall #63 */
+    mov    x0, #0           /* #0 is Stdint */
+    mov    x1, x4           /* read and copy at x4 */
+    mov    x2, #1024        /* size of the read */
+    mov    w8, #63          /* read is syscall #63 */
     svc    #0
 
-    add     x4, x4, x0          /* on return, x0 is actual read size */
-    cmp     x0, #1024           /* if we read the full buffer, try again */
+    add     x4, x4, x0      /* on return, x0 is actual read size */
+    cmp     x0, #1024       /* if we read the full buffer, try again */
     b.eq   loop    
 
 
@@ -112,14 +112,14 @@ print:
 
 notfound:
     /* syscall write(int fd, const void *buf, size_t count) */
-    mov     x0, #1      /* fd := STDOUT_FILENO */
-    ldr     x1, =s_notfound    /* buf := msg */
-    ldr     x2, =l_notfound    /* count := len */
-    mov     w8, #64     /* write is syscall #64 */
-    svc     #0          /* invoke syscall */
+    mov     x0, #1          /* fd := STDOUT_FILENO */
+    ldr     x1, =s_notfound /* buf := msg */
+    ldr     x2, =l_notfound /* count := len */
+    mov     w8, #64         /* write is syscall #64 */
+    svc     #0              /* invoke syscall */
 
 quit:
     /* syscall exit(int status) */
-    mov     x0, #0      /* status := 0 */
-    mov     w8, #93     /* exit is syscall #93 */
-    svc     #0          /* invoke syscall */
+    mov     x0, #0          /* status := 0 */
+    mov     w8, #93         /* exit is syscall #93 */
+    svc     #0              /* invoke syscall */
