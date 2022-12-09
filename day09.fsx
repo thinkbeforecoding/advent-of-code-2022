@@ -62,7 +62,7 @@ let print rope =
 
 fsi.AddPrinter print
 
-// parse an input line
+// parse an input line, we flatten each line as a seq of unit moves
 let parse (line: string) =
     let parts = line.Split(' ')
 
@@ -73,17 +73,13 @@ let parse (line: string) =
         | "L" -> left
         | "R" -> right
 
-    dir, int parts[1]
+    Seq.replicate (int parts[1]) dir 
 
-// we know how to move 1 step, just replicate inputs dir
-// to do all steps one by one
-let flatten (dir, count) = Seq.replicate count dir
 
 // Part 1
 
 System.IO.File.ReadAllLines("input/day09.txt")
-|> Array.map parse
-|> Seq.collect flatten
+|> Seq.collect parse
 |> Seq.fold
     (fun (rope, visited) dir ->
         let rope = step dir rope // make one step
@@ -136,8 +132,7 @@ startL 10
 |> stepL up
 
 System.IO.File.ReadAllLines("input/day09.txt")
-|> Array.map parse
-|> Seq.collect flatten
+|> Seq.collect parse
 |> Seq.fold
     (fun (rope, visited) dir ->
         let rope = stepL dir rope
