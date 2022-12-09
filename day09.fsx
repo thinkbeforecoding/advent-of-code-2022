@@ -1,25 +1,24 @@
 // simple integer vector arithmetic (manhattan style)
-type Vector = { X: int; Y: int }
+type Vector = int*int
 
-// ctor, addition, and subtraction
-let vec x y = { X = x; Y = y }
-let (++) v1 v2 = { X = v1.X + v2.X; Y = v1.Y + v2.Y }
-let (--) v1 v2 = { X = v1.X - v2.X; Y = v1.Y - v2.Y }
+let (++) (x1,y1) (x2,y2) = x1+x2, y1+y2
+let (--) (x1,y1) (x2,y2) = x1-x2, y1-y2
 
 // zero and unit vectors
-let v0 = vec 0 0
-let up = vec 0 1
-let down = vec 0 -1
-let left = vec -1 0
-let right = vec 1 0
+let v0 = 0, 0
+let up = 0, 1
+let down = 0, -1
+let left = -1, 0
+let right = 1, 0
+
 
 // the norm of the vector.. here we take just the largest coordinate
 // So as long as to points are in the same 9 positions square, distance is <= 1
-let norm v = max (abs v.X) (abs v.Y)
+let norm (x,y) = max (abs x) (abs y)
 
 // kind of normalize the vector in the sens of the norm above
 // since the resulting vector's cordinates are in -1/0/1
-let normalize v = vec (sign v.X) (sign v.Y)
+let normalize (x,y) = sign x, sign y
 
 // single rope
 type Rope = { Head: Vector; Tail: Vector }
@@ -48,9 +47,9 @@ let print rope =
 
     for y in 5..-1..0 do
         for x in 0..5 do
-            if x = rope.Head.X && y = rope.Head.Y then
+            if (x,y)= rope.Head  then
                 builder.Append 'H'
-            elif x = rope.Tail.X && y = rope.Tail.Y then
+            elif (x,y) = rope.Tail then
                 builder.Append 'T'
             else
                 builder.Append '.'
@@ -99,7 +98,7 @@ let printL rope =
 
     for y in 5..-1..0 do
         for x in 0..5 do
-            match List.tryFindIndex (fun n -> n.X = x && n.Y = y) rope with
+            match List.tryFindIndex (fun n -> n = (x,y)) rope with
             | Some 0 -> builder.Append 'H'
             | Some n when n = len - 1 -> builder.Append 'T'
             | Some n -> builder.Append n
