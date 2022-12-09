@@ -140,3 +140,23 @@ System.IO.File.ReadAllLines("input/day09.txt")
     (startL 10, Set.empty)
 |> snd
 |> Set.count
+
+// part 1 can also be solved with part 2 solution with a length of 2.
+let solve len input =
+    input
+    |> Seq.collect parse
+    |> Seq.fold
+        (fun (rope, visited) dir ->
+            let rope = stepL dir rope
+            let visited = Set.add (List.last rope) visited
+            rope, visited)
+        (startL len, Set.empty)
+    |> snd
+    |> Set.count
+
+System.IO.File.ReadAllLines("input/day09.txt")
+|> solve 2
+
+System.IO.File.ReadAllLines("input/day09.txt")
+|> solve 10
+
