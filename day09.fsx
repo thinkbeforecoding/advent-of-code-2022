@@ -1,8 +1,8 @@
 // simple integer vector arithmetic (manhattan style)
-type Vector = int*int
+type Vector = int * int
 
-let (++) (x1,y1) (x2,y2) = x1+x2, y1+y2
-let (--) (x1,y1) (x2,y2) = x1-x2, y1-y2
+let (++) (x1, y1) (x2, y2) = x1 + x2, y1 + y2
+let (--) (x1, y1) (x2, y2) = x1 - x2, y1 - y2
 
 // zero and unit vectors
 let v0 = 0, 0
@@ -14,11 +14,11 @@ let right = 1, 0
 
 // the norm of the vector.. here we take just the largest coordinate
 // So as long as to points are in the same 9 positions square, distance is <= 1
-let norm (x,y) = max (abs x) (abs y)
+let norm (x, y) = max (abs x) (abs y)
 
 // kind of normalize the vector in the sens of the norm above
 // since the resulting vector's cordinates are in -1/0/1
-let normalize (x,y) = sign x, sign y
+let normalize (x, y) = sign x, sign y
 
 // single rope
 type Rope = { Head: Vector; Tail: Vector }
@@ -47,12 +47,9 @@ let print rope =
 
     for y in 5..-1..0 do
         for x in 0..5 do
-            if (x,y)= rope.Head  then
-                builder.Append 'H'
-            elif (x,y) = rope.Tail then
-                builder.Append 'T'
-            else
-                builder.Append '.'
+            if (x, y) = rope.Head then builder.Append 'H'
+            elif (x, y) = rope.Tail then builder.Append 'T'
+            else builder.Append '.'
             |> ignore
 
         builder.AppendLine "" |> ignore
@@ -72,7 +69,7 @@ let parse (line: string) =
         | "L" -> left
         | "R" -> right
 
-    Seq.replicate (int parts[1]) dir 
+    Seq.replicate (int parts[1]) dir
 
 
 // Part 1
@@ -98,7 +95,7 @@ let printL rope =
 
     for y in 5..-1..0 do
         for x in 0..5 do
-            match List.tryFindIndex (fun n -> n = (x,y)) rope with
+            match List.tryFindIndex (fun n -> n = (x, y)) rope with
             | Some 0 -> builder.Append 'H'
             | Some n when n = len - 1 -> builder.Append 'T'
             | Some n -> builder.Append n
@@ -154,9 +151,6 @@ let solve len input =
     |> snd
     |> Set.count
 
-System.IO.File.ReadAllLines("input/day09.txt")
-|> solve 2
+System.IO.File.ReadAllLines("input/day09.txt") |> solve 2
 
-System.IO.File.ReadAllLines("input/day09.txt")
-|> solve 10
-
+System.IO.File.ReadAllLines("input/day09.txt") |> solve 10
