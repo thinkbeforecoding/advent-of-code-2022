@@ -152,3 +152,44 @@ let run2 n monkeys =
 System.IO.File.ReadAllLines("input/day11.txt") |> parse |> run2 10000 |> score
 
 input |> parse |> run2 10000 |> score
+
+#r "nuget: FParsec"
+open FParsec
+
+let behavior op tst t f =
+    { Op = op
+      Test = tst
+      TrueCase = t
+      FalseCase = f }
+
+let monkey n items behavior =
+    n,
+    { Items = items
+      Behavior = behavior
+      InspectedItems = 0 }
+
+// input parsing with FParsec
+let pName = pstring "Monkey " >>. pint32 .>> skipChar ':' .>> skipNewline
+
+let pline str pValue =
+    spaces >>. skipString str >>. spaces >>. pValue .>> many skipNewline
+
+let pitems = pline "Starting items:" (sepBy pint64 (skipChar ',' .>> spaces))
+let padd = skipChar '+' >>% Add
+let pmul = skipChar '*' >>% Mul
+let paddmul = (padd <|> pmul) >>= (fun f -> spaces >>. pint64 |>> f)
+let psquare = skipString "* old" >>% Square
+let pop = pline "Operation: new = old" (psquare <|> paddmul)
+let ptest = pline "Test: divisible by" pint64
+let ptrue = pline "If true: throw to monkey" pint32
+let pfalse = pline "If false: throw to monkey" pint32
+
+let pbehavior = pipe4 pop ptest ptrue pfalse behavior
+
+let pMonkey = pipe3 pName pitems pbehavior monkey
+
+runParserOnFile (many pMonkey) () "input/day11.txt" System.Text.Encoding.UTF8
+|> function
+    | Success(v, _, _) -> v
+    | Failure(e, _, _) -> failwith e
+|> Map.ofList

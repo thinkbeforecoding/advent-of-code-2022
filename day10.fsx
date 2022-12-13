@@ -8,23 +8,23 @@ open System
 
 let parse line =
     match line with
-    | "noop" -> [0]
+    | "noop" -> [ 0 ]
     | _ -> [ 0; line.Split(' ').[1] |> int ]
-    
+
 // part 1
 IO.File.ReadAllLines "input/day10.txt"
 |> Seq.collect parse
 |> Seq.scan (+) 1 // execute the add, for each cycle
-|> Seq.mapi (fun i x -> if (i-19)%40 = 0 then (i+1)*x else 0)
+|> Seq.mapi (fun i x -> if (i - 19) % 40 = 0 then (i + 1) * x else 0)
 |> Seq.sum
 
 // part 2
 IO.File.ReadAllLines "input/day10.txt"
 |> Seq.collect parse
 |> Seq.scan (+) 1 // execute the add, for each cycle
-|> Seq.mapi (fun i x -> if abs((i%40)-x) <= 1 then '#' else '.')
+|> Seq.mapi (fun i x -> if abs ((i % 40) - x) <= 1 then '#' else '.')
 |> Seq.chunkBySize 40
-|> Seq.iter (String >> printfn "%s") 
+|> Seq.iter (String >> printfn "%s")
 
 
 // ###..#....###...##..####.###...##..#....
