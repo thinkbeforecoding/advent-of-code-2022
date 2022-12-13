@@ -2,11 +2,45 @@
 
 open System
 
+// Super easy solution found with zack!
+// see that addx can be considered as a noop followed by a 1 cycle add
+// then see that noop can be considered as a 1 cycle add 0
+
+let parse line =
+    match line with
+    | "noop" -> [0]
+    | _ -> [ 0; line.Split(' ').[1] |> int ]
+    
+// part 1
+IO.File.ReadAllLines "input/day10.txt"
+|> Seq.collect parse
+|> Seq.scan (+) 1 // execute the add, for each cycle
+|> Seq.mapi (fun i x -> if (i-19)%40 = 0 then (i+1)*x else 0)
+|> Seq.sum
+
+// part 2
+IO.File.ReadAllLines "input/day10.txt"
+|> Seq.collect parse
+|> Seq.scan (+) 1 // execute the add, for each cycle
+|> Seq.mapi (fun i x -> if abs((i%40)-x) <= 1 then '#' else '.')
+|> Seq.chunkBySize 40
+|> Seq.iter (String >> printfn "%s") 
+
+
+// ###..#....###...##..####.###...##..#....
+// #..#.#....#..#.#..#.#....#..#.#..#.#....
+// #..#.#....#..#.#..#.###..###..#....#....
+// ###..#....###..####.#....#..#.#....#....
+// #....#....#....#..#.#....#..#.#..#.#....
+// #....####.#....#..#.#....###...##..####.
+
+// my original solution
+
 type Instruction =
     | Noop
     | Addx of int
 
-let parse line =
+let parseLine line =
     match line with
     | "noop" -> Noop
     | _ -> line.Split(' ').[1] |> int |> Addx
@@ -43,7 +77,7 @@ let power p =
 
 
 IO.File.ReadAllLines("input/day10.txt")
-|> Seq.map parse
+|> Seq.map parseLine
 |> Seq.toList
 |> eval
 |> List.sumBy power
@@ -55,7 +89,7 @@ let pixel proc =
     if abs (proc.X - pixel) <= 1 then '#' else '.'
 
 IO.File.ReadAllLines("input/day10.txt")
-|> Seq.map parse
+|> Seq.map parseLine
 |> Seq.toList
 |> eval
 |> List.map pixel
