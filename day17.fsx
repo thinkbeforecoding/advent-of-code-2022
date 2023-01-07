@@ -245,13 +245,6 @@ let rec run n t =
 Console.CursorVisible <- false
 Console.Clear()
 input |> start |> rund 10 |> ignore
-#time
-
-
-
-
-
-
 
 let t =
     Console.Clear()
