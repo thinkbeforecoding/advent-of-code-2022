@@ -247,6 +247,12 @@ Console.Clear()
 input |> start |> rund 10 |> ignore
 #time
 
+
+
+
+
+
+
 let t =
     Console.Clear()
     // IO.File.ReadAllText("input/day17.txt")
